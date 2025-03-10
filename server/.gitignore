@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Logs & Debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# TypeScript build output
+*.tsbuildinfo
+
+# Prisma (if you decide to use it)
+prisma/migrations/
+
+# Multer uploads (if storing files locally)
+uploads/
