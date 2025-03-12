@@ -12,8 +12,12 @@ import { securityMiddleware } from "./middlewares/securityMiddleware";
 import { authLimiter, generalLimiter } from "./config/rateLimiter";
 import { errorHandler } from "./middlewares/errorMiddleware";
 
-import { statusRouter } from "./routes/statusRoutes";
-import { authRouter } from "./routes/authRoutes";
+import { statusRouter } from "./routes/status.routes";
+import { authRouter } from "./routes/auth.routes";
+import { propertyRouter } from "./routes/property.routes";
+import { userRouter } from "./routes/user.routes";
+import { bookingRouter } from "./routes/booking.routes";
+import { fileUploadMiddleware } from "./config/expressFileUpload";
 
 const PORT: string | number = process.env.PORT || 3001;
 const app: Application = express();
@@ -25,6 +29,7 @@ const server = app.listen(PORT, () => {
 securityMiddleware(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileUploadMiddleware);
 app.use((req: Request, res: Response, next: NextFunction) => {
   logger.info(`[${req.method}] ${req.url} - ${req.ip}`);
   next();
@@ -33,7 +38,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(generalLimiter);
 
 app.use(`${BV}`, statusRouter);
+app.use(`${BV}/user`, userRouter);
 app.use(`${BV}/user/auth`, authLimiter, authRouter);
+app.use(`${BV}/properties`, propertyRouter);
+app.use(`${BV}/bookings`, bookingRouter);
+app.all("*", (req: Request, res: Response) => {
+  res.status(404).json({ error: "Route not found" });
+});
 
 app.use(errorHandler);
 const shutdown = async () => {

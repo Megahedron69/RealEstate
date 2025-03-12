@@ -1,4 +1,4 @@
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,18 +9,110 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(uuid())
-  email          String   @unique
+  id             String      @id @default(uuid())
+  email          String      @unique
   username       String? 
   password       String   
-  role           Role     @default(USER) 
-  emailVerified  Boolean  @default(false) 
+  role           Role        @default(USER) 
+  emailVerified  Boolean     @default(false) 
   refreshToken   String?  
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  // Relationships
+  properties     Properties[] 
+  transactions   Transactions[]
+  sentMessages   Message[]    @relation("SentMessages")
+  receivedChats  Chat[]       @relation("ReceiversChats")
+  sentChats      Chat[]       @relation("SendersChats")
+}
+
+model Properties {
+  id              String         @id @default(uuid())
+  name            String         @default("Unnamed Property") 
+  description     String?    
+  listingCreatedBy String
+  user            User           @relation(fields: [listingCreatedBy], references: [id], onDelete: Cascade)
+  price           Float
+  isRentable      Boolean        @default(false)
+  propertyType    PropType
+  numBedrooms     Int
+  numKitchens     Int
+  numBathrooms    Int
+  propertyStatus  PropStatus
+  location        String  
+  latitude        Float?    
+  longitude       Float?   
+  areaSize        Float?     
+  amenities       String[]   
+  images          String[]   
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  transactions    Transactions[] @relation("PropertyTransactions")
+  offers          Transactions[] @relation("PropertyOffers")
+}
+
+model Transactions {
+  id              String           @id @default(uuid())
+  userId          String
+  propertyId      String
+  transactionType TransactionType
+  status          BookingStatus    @default(PENDING)
+  amount          Float
+  transactionDate DateTime         @default(now())
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property        Properties       @relation(fields: [propertyId], references: [id], onDelete: Cascade, name: "PropertyTransactions", map: "transactions_propertyId_fkey")
+  propertyOffers  Properties       @relation(fields: [propertyId], references: [id], name: "PropertyOffers", map: "offers_propertyId_fkey")
+}
+
+
+model Chat {
+  id             String         @id @default(uuid())
+  user1Id        String
+  user2Id        String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  user1          User           @relation("SendersChats", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2          User           @relation("ReceiversChats", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages       Message[]
+}
+
+model Message {
+  id             String         @id @default(uuid())
+  chatId         String
+  senderId       String
+  content        String
+  isRead         Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  chat           Chat           @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender         User           @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+enum PropType {
+  APARTMENT
+  HOUSE
+  VILLA
+}
+
+enum PropStatus {
+  AVAILABLE
+  SOLD
+  RENTED
+}
+
+enum TransactionType {
+  BUY
+  SELL
+  RENT
+}
+
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }

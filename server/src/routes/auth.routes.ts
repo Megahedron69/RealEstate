@@ -8,6 +8,7 @@ import {
   signUpUser,
 } from "../controllers/auth.controller";
 import { asyncHandler } from "../middlewares/asynMiddleware";
+import authMiddleware from "../middlewares/authMiddleware";
 
 export const authRouter = Router();
 
@@ -22,5 +23,5 @@ authRouter.post(
   validateRequest(loginSchema),
   asyncHandler(loginUser)
 );
-authRouter.post("/logout", asyncHandler(logoutUser));
+authRouter.post("/logout", authMiddleware, asyncHandler(logoutUser));
 authRouter.post("/refreshToken", asyncHandler(refreshAccToken));

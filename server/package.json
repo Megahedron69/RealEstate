@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/app.ts",
+    "socket": "nodemon --exec ts-node src/socket.ts",
     "start": "node dist/app.js"
   },
   "keywords": [],
@@ -12,10 +13,10 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
+    "@types/express-fileupload": "^1.5.1",
     "@types/express-session": "^1.18.1",
     "@types/hpp": "^0.2.6",
     "@types/jsonwebtoken": "^9.0.9",
@@ -34,16 +35,17 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^5.0.1",
+    "express": "^4.21.2",
+    "express-fileupload": "^1.5.1",
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
     "helmet": "^8.0.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
-    "multer": "^1.4.5-lts.1",
     "pg": "^8.13.3",
     "socket.io": "^4.8.1",
+    "uuid": "^11.1.0",
     "winston": "^3.17.0"
   }
 }
