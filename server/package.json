@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "dev": "nodemon --exec ts-node src/app.ts",
     "socket": "nodemon --exec ts-node src/socket.ts",
     "start": "node dist/app.js"
