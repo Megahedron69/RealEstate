@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 
 const generateTokens = (id: string, email: string) => {
   const accessToken = jwt.sign(
@@ -16,7 +16,7 @@ const generateTokens = (id: string, email: string) => {
 
 const isMyTokenValid = (token: string, secret: string) => {
   try {
-    const decodedToken = jwt.verify(token, secret) as jwt.JwtPayload;
+    const decodedToken = jwt.verify(token, secret);
     return decodedToken || false;
   } catch (error) {
     return false;

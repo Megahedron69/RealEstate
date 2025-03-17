@@ -1,11 +1,10 @@
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../config/supabase";
-import type { UploadedFile } from "express-fileupload";
 import { ApiError } from "../middlewares/errorMiddleware";
 
 export const uploadImagesToSupabase = async (
-  images: UploadedFile[] | UploadedFile | undefined,
+  images: any[] | any | undefined,
   propertyId: string
 ): Promise<string[]> => {
   try {
